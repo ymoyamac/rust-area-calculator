@@ -30,28 +30,32 @@ fn calc_area(choice: Result<i32, ParseIntError>) -> Result<f32, String> {
     match choice {
         Ok(1) => {
             println!("Circle area calculator");
-            let radio = read_input();
+            let radio = read_input("radio");
             Ok(std::f32::consts::PI * radio * radio)
         },
         Ok(2) => {
             println!("Rectangle area calculator");
-            let base = read_input();
-            let height = read_input();
+            let base = read_input("base");
+            let height = read_input("height");
             Ok(base * height)
         },
         Ok(3) => {
             println!("Square area calculator");
-            let side = read_input();
+            let side = read_input("side");
             Ok(side * side)
         },
         _ => Err("Invalid choice".to_string())
     }
 }
 
-fn read_input() -> f32 {
-    println!("Please type a value:");
-    let mut input = String::new();
-    io::stdin().read_line(&mut input).expect("");
-    let input = input.trim().parse::<f32>().expect("Failed to parse");
-    input
+fn read_input(msg: &str) -> f32 {
+    loop {
+        println!("Please type a {}:", msg);
+        let mut input = String::new();
+        io::stdin().read_line(&mut input).expect("");
+        return match input.trim().parse::<f32>() {
+            Ok(num) => num,
+            Err(_) => continue
+        };
+    }
 }
